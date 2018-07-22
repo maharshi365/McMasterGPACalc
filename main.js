@@ -10,6 +10,7 @@ function processRawData(){
 	}
 
 	for (var i=0;i<courses.length;i++){
+		// get the Twelve Point grade from the letter grade
 		var grade = courses[i][3];
 		if(grade == 'A+'){
 			courses[i].push(12);
@@ -51,13 +52,16 @@ function processRawData(){
 			courses[i].push(0);
 		}
 
-		if((courses[i][5] == 'In Progress') || (courses[i][3] == 'NC') || (courses[i][3] == 'COM')){
+		// Check to see if course should be included in GPA Calc
+		if((courses[i][5] == 'In Progress') || (courses[i][3] == 'NC') || (courses[i][3] == 'COM') || (courses[i][5] == 'Transferred')){
 			courses[i].push('False');
 		}
 		else{
 			courses[i].push('True');
 		}
 	}
+
+	console.log(courses);
 
 	var units = 0.0;
 	var credits = 0;
