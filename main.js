@@ -59,20 +59,27 @@ function processRawData(){
 		else{
 			courses[i].push('True');
 		}
-	}
 
-	console.log(courses);
-
-	var units = 0.0;
-	var credits = 0;
-
-	for(var j=0;j<courses.length;j++){
-		if(courses[j][7] == 'True'){
-			courses[j].push(courses[j][4]*courses[j][6]);
-			units = units+parseFloat(courses[j][4]);
-			credits = credits + courses[j][8];
+		// calculate academic year of course taken
+		if(courses[i][2].substring(5,9) == 'Fall'){
+			courses[i].push(parseInt(courses[i][2].substring(0,4)));
 		}
+		else{
+			courses[i].push(parseInt(courses[i][2].substring(0,4)) - 1);
+		}
+
+		// calculate credits earned
+		courses[i].push(courses[i][4]*courses[i][6]);
 	}
 
-	alert(credits/units);
+	var totalCredits = 0;
+	var totalUnits = 0.0;
+
+	for (var j = 0; j<courses.length; j++){
+		if(courses[j][7] == 'True'){
+		totalUnits = totalUnits + parseInt(courses[j][4]);
+		totalCredits = totalCredits + courses[j][9];
+	}
+}
+	alert(totalCredits/totalUnits);
 }
