@@ -41,6 +41,10 @@ $(document).ready(function(){
 		$("#gradesTable").append(tableString);
 	});
 
+	$('.breakrow').click(function() {
+  		$(this).nextUntil('.breakrow').toggle("hide");
+	});
+
 });
 
 
@@ -275,9 +279,3 @@ function createYearRow(TimePeriod,Units,Credits,grade){
 function createSemesterRow(TimePeriod,Units,Credits,grade){
 	return '<tr class="datarow"><td>' + TimePeriod.toString() + '</td><td>' + Units.toString() + '</td><td>' + Credits.toString() + '</td><td>' + grade.toString() + '</td></tr>';
 }
-
-
-$('.first-level').click(function() {
-    $(this).nextUntil('.first-level').toggle("slow");
-   
-});
