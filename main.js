@@ -25,14 +25,23 @@ $(document).ready(function(){
 		console.log(cumulative);
 		console.log(yearly);
 		console.log(semseterly);
+		console.log(data);
 
 		tableString = '<table>' + createTableHeaders();
+		tableString = tableString + createCumulativeRow(cumulative[1],cumulative[2],cumulative[3]);
 		
 		for(var i = 0; i<yearly.length; i++){
-			tableString = tableString + createYearRow(yearly[i][0],yearly[i][1],yearly[i][2],yearly[i][3]);
+			if(yearly[i][1] != 0){
+				tableString = tableString + createYearRow(yearly[i][0],yearly[i][1],yearly[i][2],yearly[i][3]);
+			}
 			for(var j = 0; j<semseterly.length; j++){
-				if(semseterly[j][4] == yearly[i][4]){
+				if((semseterly[j][4] == yearly[i][4]) && (semseterly[j][1] != 0) ){
 					tableString = tableString + createSemesterRow(semseterly[j][0],semseterly[j][1],semseterly[j][2],semseterly[j][3]);
+				}
+				for(var k=0; k<data.length; k++){
+					if((semseterly[j][0] == data[k][2]) && (data[k][8] == yearly[i][4]) && (data[k][7] == true)){
+						tableString = tableString + createCourseRow(data[k][1],data[k][4],data[k][10],data[k][6]);
+					}
 				}
 			}
 		}
@@ -41,8 +50,10 @@ $(document).ready(function(){
 		$("#gradesTable").append(tableString);
 	});
 
-	$('.breakrow').click(function() {
-  		$(this).nextUntil('.breakrow').toggle("hide");
+
+	//event to seperate courses from years
+	$("#gradesTable").on("click", ".semesterrow", function() {
+    	$(this).nextUntil('.semesterrow').toggle("hide");
 	});
 
 });
@@ -198,7 +209,7 @@ function calculateCumulativeGPA(cumulative,courses){
 		totalCredits = totalCredits + courses[l][10];
 	}
 }
-	cumulative=['Cumulative',totalUnits.toString(),totalCredits.toString(),((totalCredits/totalUnits).toFixed(2)).toString()];
+	cumulative=['Cumulative',totalUnits.toString(),totalCredits.toString(),((totalCredits/totalUnits).toFixed(1)).toString()];
 	return cumulative;
 }
 
@@ -217,7 +228,7 @@ function calculateYearlyGPA(yearly,courses,years){
 				totalCredits = totalCredits + courses[k][10];
 			}
 		}
-		finalData[j]=[years[j].toString() + '-' + (years[j]+1).toString(),totalUnits.toString(),totalCredits.toString(),((totalCredits/totalUnits).toFixed(2)).toString()];
+		finalData[j]=[years[j].toString() + '-' + (years[j]+1).toString(),totalUnits.toString(),totalCredits.toString(),((totalCredits/totalUnits).toFixed(1)).toString()];
 
 	}
 
@@ -244,7 +255,7 @@ function calculateSemesterlyGPA(semesterly,courses,semesters){
 				totalCredits = totalCredits + courses[k][10];
 			}
 		}
-		finalData[j]=[semesters[j],totalUnits.toString(),totalCredits.toString(),((totalCredits/totalUnits).toFixed(2)).toString()];
+		finalData[j]=[semesters[j],totalUnits.toString(),totalCredits.toString(),((totalCredits/totalUnits).toFixed(1)).toString()];
 
 	}
 
@@ -271,11 +282,17 @@ function createTableHeaders(){
 	return '<thead><tr class="tableheader"><th>Time Period</th><th>Units Taken</th><th>Credits Earned</th><th>GPA</th></tr></thead><tbody>'
 }
 
-function createYearRow(TimePeriod,Units,Credits,grade){
-	return '<tr class="breakrow"><td>' + TimePeriod.toString() + '</td><td>' + Units.toString() + '</td><td>' + Credits.toString() + '</td><td>' + grade.toString() + '</td></tr>';
-
+function createCumulativeRow(Units,Credits,grade){
+	return '<tr class="cumulativerow"><td>Cumulative</td><td>' + Units.toString() + '</td><td>' + Credits.toString() + '</td><td>' + grade.toString() + '</td></tr>';
 }
 
+function createYearRow(TimePeriod,Units,Credits,grade){
+	return '<tr class="yearrow"><td>' + TimePeriod.toString() + '</td><td>' + Units.toString() + '</td><td>' + Credits.toString() + '</td><td>' + grade.toString() + '</td></tr>';
+}
 function createSemesterRow(TimePeriod,Units,Credits,grade){
-	return '<tr class="datarow"><td>' + TimePeriod.toString() + '</td><td>' + Units.toString() + '</td><td>' + Credits.toString() + '</td><td>' + grade.toString() + '</td></tr>';
+	return '<tr class="semesterrow"><td>' + TimePeriod.toString() + '</td><td>' + Units.toString() + '</td><td>' + Credits.toString() + '</td><td>' + grade.toString() + '</td></tr>';
+}
+
+function createCourseRow(Course,Units,Credits,grade){
+	return '<tr class="courserow"><td>' + Course.toString() + '</td><td>' + Units.toString() + '</td><td>' + Credits.toString() + '</td><td>' + grade.toString() + '</td></tr>';
 }
