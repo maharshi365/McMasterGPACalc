@@ -53,8 +53,11 @@ $(document).ready(function(){
 
 	//event to seperate courses from years
 	$("#gradesTable").on("click", ".semesterrow", function() {
-    	$(this).nextUntil('.semesterrow').toggle("hide");
+    	$(this).nextUntil('.semesterrow,.yearrow').fadeToggle("slow");
 	});
+
+
+
 
 });
 
