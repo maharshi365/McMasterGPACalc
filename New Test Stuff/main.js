@@ -22,7 +22,7 @@ $(document).ready(function(){
 		var semesterly = [];
 		semseterly = calculateSemesterlyGPA(semesterly,data,semsetersUn);
 
-		 console.log(cumulative);
+		// console.log(cumulative);
 		// console.log(yearly);
 		// console.log(semseterly);
 		// console.log(data);
@@ -47,17 +47,18 @@ $(document).ready(function(){
 		}
 		tableString = tableString + '</tbody></table>';
 		$("#gradesTable").append(tableString);
+		console.log(tableString);
 
 		 var courseArr = createCourseArray(data);
 		 var semArr = createSemesterArray(courseArr,semsetersUn);
 		 var yearArr = createYearArray(semArr,years);
 		 var history = createHistory(yearArr,cumulative);
-		 console.log(courseArr);
-		 console.log(semArr);
-		 console.log(yearArr);
-		 console.log(history);
+		 // console.log(courseArr);
+		 // console.log(semArr);
+		 // console.log(yearArr);
+		 // console.log(history);
 
-		 $('#gradesTable2').DataTable();
+		
 
 	});
 

@@ -8,6 +8,7 @@ $(document).ready(function(){
 		// extract all unique years
 		var years = [];
 		years = extractUniqueYears(years,data);
+		years = years.sort();
 
 		// extract all unique semesters
 		var semsetersUn = [];
