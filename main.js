@@ -134,7 +134,7 @@ function getTwelvePoint(courses){
 
 function isIncluded(courses){
 	for (var i=0;i<courses.length;i++){
-		if((courses[i][5] == 'In Progress') || (courses[i][3] == 'NC') || (courses[i][3] == 'COM') || (courses[i][5] == 'Transferred')){
+		if((courses[i][5] == 'In Progress') || (courses[i][3] == 'NC') || (courses[i][3] == 'COM') || (courses[i][5] == 'Transferred') (courses[i][4] == 0)){
 			courses[i].push(false);
 		}
 		else{
