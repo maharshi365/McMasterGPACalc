@@ -41,7 +41,7 @@ $(document).ready(function(){
 				}
 				for(var k=0; k<data.length; k++){
 					if((semseterly[j][0] == data[k][2]) && (data[k][8] == yearly[i][4]) && (data[k][7] == true)){
-						tableString = tableString + createCourseRow(data[k][1],data[k][4],data[k][10],data[k][6]);
+						tableString = tableString + createCourseRow(data[k][1],data[k][0],data[k][4],data[k][10],data[k][6]);
 					}
 				}
 			}
@@ -297,6 +297,6 @@ function createSemesterRow(TimePeriod,Units,Credits,grade){
 	return '<tr class="semesterrow"><td>' + TimePeriod.toString() + '</td><td>' + Units.toString() + '</td><td>' + Credits.toString() + '</td><td>' + grade.toString() + '</td></tr>';
 }
 
-function createCourseRow(Course,Units,Credits,grade){
-	return '<tr class="courserow"><td>' + Course.toString() + '</td><td>' + Units.toString() + '</td><td>' + Credits.toString() + '</td><td>' + grade.toString() + '</td></tr>';
+function createCourseRow(Course,Code,Units,Credits,grade){
+	return '<tr class="courserow"><td>' + (Code.toString() + ': ' + Course.toString()) + '</td><td>' + Units.toString() + '</td><td>' + Credits.toString() + '</td><td>' + grade.toString() + '</td></tr>';
 }
