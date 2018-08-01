@@ -49,6 +49,9 @@ $(document).ready(function(){
 		console.log(tableString);
 		tableString = tableString + '</tbody></table>';
 		$("#gradesTable").append(tableString);
+
+		var uniqueGrades = getUniqueGrade(data);
+		console.log(uniqueGrades);
 	});
 
 
@@ -56,9 +59,6 @@ $(document).ready(function(){
 	$("#gradesTable").on("click", ".semesterrow", function() {
     	$(this).nextUntil('.semesterrow,.yearrow').fadeToggle("slow");
 	});
-
-
-
 
 });
 
@@ -299,4 +299,16 @@ function createSemesterRow(TimePeriod,Units,Credits,grade){
 
 function createCourseRow(Course,Code,Units,Credits,grade){
 	return '<tr class="courserow"><td>' + (Code.toString() + ': ' + Course.toString()) + '</td><td>' + Units.toString() + '</td><td>' + Credits.toString() + '</td><td>' + grade.toString() + '</td></tr>';
+}
+
+function getUniqueGrade(data){
+	var freq = [];
+	for(var i=0;i<data.length;i++){
+		if ((data[i][7] == true) && (freq.includes(data[i][6]) == false)){
+			freq.push(data[i][6]);
+		}
+	}
+
+	freq = freq.sort(function (a, b) {return a - b;})
+	return freq;
 }
