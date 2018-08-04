@@ -1,5 +1,5 @@
 $(document).ready(function(){
-	$("#gobutton").click(function() {
+	$("#button").click(function() {
 		var userText = $("#inputText").val();
 		var data = processRawData(userText);
 		data = getAllData(data);
