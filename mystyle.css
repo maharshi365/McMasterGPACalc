@@ -25,6 +25,7 @@ tr:hover {background-color:#f5f5f5;}
 .semesterrow{
 	background-color:#f0ad4e;
 	color: white;
+	display: none;
 }
 
 .courserow{

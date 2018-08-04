@@ -55,10 +55,25 @@ $(document).ready(function(){
 	});
 
 
-	//event to seperate courses from years
-	$("#gradesTable").on("click", ".semesterrow", function() {
-    	$(this).nextUntil('.semesterrow,.yearrow').fadeToggle("slow");
+	$('.semesterrow').hide();
+	$('.courserow').hide();
+
+	$('#gradesTable').on('click', 'tr', function(){
+	    $this = $(this);
+	    
+	    if( $this.hasClass('yearrow') ){
+	        if ( $this.hasClass('open') ) {
+	            $this.toggleClass('open').nextUntil('.yearrow', 'tr').hide();
+	        }
+	        else {
+	            $this.toggleClass('open').nextUntil('.yearrow', 'tr:not(.courserow)').toggle();
+	        }
+	    }
+	    else if ( $this.hasClass('semesterrow') ){
+	        $this.nextUntil('.semesterrow', 'tr:not(.yearrow)').toggle();
+	    }
 	});
+
 
 });
 
