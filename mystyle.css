@@ -11,10 +11,6 @@ th,td {
     border-bottom: 1px solid #ddd;
 }
 
-.cumulativerow:hover {
-    background-color: #555;
-}
-
 .yearrow:hover {
     background-color: #d0005e;
 }
