@@ -12,11 +12,11 @@ th,td {
 }
 
 .cumulativerow:hover {
-    background-color: #666;
+    background-color: #555;
 }
 
 .yearrow:hover {
-    background-color: #ae004f;
+    background-color: #d0005e;
 }
 
 .semesterrow:hover {
@@ -24,7 +24,7 @@ th,td {
 }
 
 .courserow:hover {
-    background-color: #e7e8ea;
+    background-color: #cccfd2;
 }
 
 .cumulativerow {
