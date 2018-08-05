@@ -1,35 +1,50 @@
 table {
-	border-collapse: collapse;
-	width: 100%;
-	align-content: center;
-	align-self: center;
+    border-collapse: collapse;
+    width: 80%;
+    margin-left: 10%;
+    margin-right: 10%;
 }
 
-th, td {
-	padding: 8px;
-	text-align: center;
-	border-bottom: 1px solid #ddd;
-}
-tr:hover {background-color:#aaaaaa;}
-
-.cumulativerow{
-	background-color:#222;
-	color: white;
+th,td {
+    padding: 8px;
+    text-align: center;
+    border-bottom: 1px solid #ddd;
 }
 
-.yearrow{
-	background-color:#6A0030;
-	color: white;
+.cumulativerow:hover {
+    background-color: #666;
 }
 
-.semesterrow{
-	background-color:#f0ad4e;
-	color: white;
-	display: none;
+.yearrow:hover {
+    background-color: #ae004f;
 }
 
-.courserow{
-	background-color:#969CA2;
-	color: white;
-	display: none;
+.semesterrow:hover {
+    background-color: #f8d9ac;
+}
+
+.courserow:hover {
+    background-color: #e7e8ea;
+}
+
+.cumulativerow {
+    background-color: #222;
+    color: white;
+}
+
+.yearrow {
+    background-color: #6A0030;
+    color: white;
+}
+
+.semesterrow {
+    background-color: #f0ad4e;
+    color: white;
+    display: none;
+}
+
+.courserow {
+    background-color: #969CA2;
+    color: white;
+    display: none;
 }
