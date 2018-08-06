@@ -275,23 +275,23 @@ function academicYearID(data) {
 }
 
 function createTableHeaders() {
-    return '<thead><tr class="tableheader"><th>Time Period</th><th>Units Taken</th><th>Credits Earned</th><th>GPA</th></tr></thead><tbody>'
+    return '<thead style = "padding: 8px; text-align: center;"><tr class="tableheader"><th>Time Period</th><th>Units Taken</th><th>Credits Earned</th><th>GPA</th></tr></thead><tbody>'
 }
 
 function createCumulativeRow(Units, Credits, grade) {
-    return '<tr class="cumulativerow"><td>Cumulative</td><td>' + Units.toString() + '</td><td>' + Credits.toString() + '</td><td>' + grade.toString() + '</td></tr>';
+    return '<tr class="cumulativerow" style = "padding: 8px; text-align: center; "><td>Cumulative</td><td>' + Units.toString() + '</td><td>' + Credits.toString() + '</td><td>' + grade.toString() + '</td></tr>';
 }
 
 function createYearRow(TimePeriod, Units, Credits, grade) {
-    return '<tr class="yearrow"><td>' + TimePeriod.toString() + '</td><td>' + Units.toString() + '</td><td>' + Credits.toString() + '</td><td>' + grade.toString() + '</td></tr>';
+    return '<tr class="yearrow" style = "padding: 8px; text-align: center; "><td>' + TimePeriod.toString() + '</td><td>' + Units.toString() + '</td><td>' + Credits.toString() + '</td><td>' + grade.toString() + '</td></tr>';
 }
 
 function createSemesterRow(TimePeriod, Units, Credits, grade) {
-    return '<tr class="semesterrow"><td>' + TimePeriod.toString() + '</td><td>' + Units.toString() + '</td><td>' + Credits.toString() + '</td><td>' + grade.toString() + '</td></tr>';
+    return '<tr class="semesterrow" style = "padding: 8px; text-align: center; "><td>' + TimePeriod.toString() + '</td><td>' + Units.toString() + '</td><td>' + Credits.toString() + '</td><td>' + grade.toString() + '</td></tr>';
 }
 
 function createCourseRow(Course, Code, Units, Credits, grade) {
-    return '<tr class="courserow"><td>' + (Code.toString() + ': ' + Course.toString()) + '</td><td>' + Units.toString() + '</td><td>' + Credits.toString() + '</td><td>' + grade.toString() + '</td></tr>';
+    return '<tr class="courserow" style = "padding: 8px; text-align: center;"><td>' + (Code.toString() + ': ' + Course.toString()) + '</td><td>' + Units.toString() + '</td><td>' + Credits.toString() + '</td><td>' + grade.toString() + '</td></tr>';
 }
 
 function getUniqueGrade(data) {
