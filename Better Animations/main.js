@@ -275,7 +275,7 @@ function academicYearID(data) {
 }
 
 function createTableHeaders() {
-    return '<div class="header row justify-content-center"><div class="cell col" style="text-align: center; width: 819px;">Time Period</div><div class="cell col" style="text-align: center; width:91px;">Units Taken</div><div class="cell col" style="text-align: center; width:91px;">Credits Earned</div><div class="cell col" style="text-align: center; width:91px;">GPA</div></div>';
+    return '<div class="header row justify-content-center"><div class="cell col" style="text-align: center; width: 819px; vertical-align: middle;">Time Period</div><div class="cell col" style="text-align: center; width:91px;">Units Taken</div><div class="cell col" style="text-align: center; width:91px;">Credits Earned</div><div class="cell col" style="text-align: center; width:91px;">GPA</div></div>';
 }
 
 function createCumulativeRow(Units, Credits, grade) {
