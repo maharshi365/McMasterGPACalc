@@ -49,7 +49,7 @@ $(document).ready(function() {
         $("#gradesTable").html(tableString);
 
         var uniqueGrades = getUniqueGrade(data);
-        console.log(uniqueGrades);
+        data = refineData(data)
     });
 
 
@@ -304,4 +304,29 @@ function getUniqueGrade(data) {
 
     freq = freq.sort(function(a, b) { return a - b; })
     return freq;
+}
+
+function refineData(data){
+	var toReturn=[];
+	toReturn.push(["Course Code","Units","Grade","Year","Semester"]);
+	for (var i=0; i<data.length; i++){
+		toReturn.push([data[i][0],data[i][4],data[i][6],data[i][8],data[i][9]]);
+	}
+	return toReturn;
+}
+
+function toJSON(data){
+   
+
+    var i, n = data.length;
+    var tmp = new Array();
+    for (i=0; i<n; i++)
+    {
+        tmp[i] = [data[i][0],data[i][1], data[i][2],data[i][3],data[i][4]];
+    }
+    var mObj = new Object;
+    mObj.Courses = tmp;
+    var objJSON = JSON.stringify(mObj);
+
+    return objJSON
 }
