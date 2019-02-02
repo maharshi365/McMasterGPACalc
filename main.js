@@ -1,64 +1,50 @@
 $(document).ready(function() {
     $("#button").click(function() {
         var userText = $("#inputText").val();
-        var data = processRawData(userText);
-        data = getAllData(data);
-        data = data.sort()
-
-        // extract all unique years
+        var courses = processRawData(userText);
+        courses = getAllData(courses);
+        courses = isIncluded(courses);
+        // for future if not included courses need to be accessed
+        var notIncluded = courses[1];
+        courses = courses[0];
+        courses = courses.sort();
+        //array of all unique years
         var years = [];
-        years = extractUniqueYears(years, data);
-        years = years.sort();
-
-        // extract all unique semesters
-        var semsetersUn = [];
-        semsetersUn = extractUniqueSemesters(semsetersUn, data);
-
-        //calculate cumulative values
-        var cumulative = [];
-        cumulative = calculateCumulativeGPA(cumulative, data);
-
-        //calculate yearly values
-        var yearly = [];
-        yearly = calculateYearlyGPA(yearly, data, years);
-
+        years = extractUniqueYears(years, courses);
+        //array of all unique semesters
+        var semesters = [];
+        semesters = extractUniqueSemesters(semesters, courses);
+        //calculate cumulative GPA data
+        var cumulative = calculateCumulativeGPA(courses);
+        //calculate yearly GPA data
+        var yearly = calculateYearlyGPA(courses, years);
         //calculate semsterly values
-        var semesterly = [];
-        semseterly = calculateSemesterlyGPA(semesterly, data, semsetersUn);
+        var semesterly = calculateSemesterlyGPA(courses, semesters);
 
         tableString = '<table>' + createTableHeaders();
         tableString = tableString + createCumulativeRow(cumulative[1], cumulative[2], cumulative[3]);
-
         for (var i = 0; i < yearly.length; i++) {
             if (yearly[i][1] != 0) {
                 tableString = tableString + createYearRow(yearly[i][0], yearly[i][1], yearly[i][2], yearly[i][3]);
             }
-            for (var j = 0; j < semseterly.length; j++) {
-                if ((semseterly[j][4] == yearly[i][4]) && (semseterly[j][1] != 0)) {
-                    tableString = tableString + createSemesterRow(semseterly[j][0], semseterly[j][1], semseterly[j][2], semseterly[j][3]);
+            for (var j = 0; j < semesterly.length; j++) {
+                if ((semesterly[j][4] == yearly[i][4]) && (semesterly[j][1] != 0)) {
+                    tableString = tableString + createSemesterRow(semesterly[j][0], semesterly[j][1], semesterly[j][2], semesterly[j][3]);
                 }
-                for (var k = 0; k < data.length; k++) {
-                    if ((semseterly[j][0] == data[k][2]) && (data[k][8] == yearly[i][4]) && (data[k][7] == true)) {
-                        tableString = tableString + createCourseRow(data[k][1], data[k][0], data[k][4], data[k][10], data[k][6]);
+                for (var k = 0; k < courses.length; k++) {
+                    if ((semesterly[j][0] == courses[k][3]) && (courses[k][1] == yearly[i][4])) {
+                        tableString = tableString + createCourseRow(courses[k][0], courses[k][5], courses[k][6], courses[k][4]);
                     }
                 }
             }
         }
-        console.log(tableString);
         tableString = tableString + '</tbody></table>';
         $("#gradesTable").html(tableString);
-
-        var uniqueGrades = getUniqueGrade(data);
-        data = refineData(data)
     });
-
-
     $('.semesterrow').hide();
     $('.courserow').hide();
-
     $('#gradesTable').on('click', 'tr', function() {
         $this = $(this);
-
         if ($this.hasClass('yearrow')) {
             if ($this.hasClass('open')) {
                 $this.toggleClass('open').nextUntil('.yearrow', 'tr').hide(600);
@@ -69,18 +55,7 @@ $(document).ready(function() {
             $this.nextUntil('.semesterrow', 'tr:not(.yearrow)').toggle(600);
         }
     });
-
 });
-
-function getAllData(data) {
-    data = getTwelvePoint(data);
-    data = isIncluded(data);
-    data = addAcademicYear(data);
-    data = addSemester(data);
-    data = calculateCredits(data)
-    data = convertUnits(data);
-    return data;
-}
 
 function processRawData(rawData) {
     var format = /[A-Z]+ +(.*)+\n+(.*)+\n+(.*)+\n+(.*)+\n+(.*)+\n+(.*)+/gm;
@@ -92,176 +67,176 @@ function processRawData(rawData) {
     return courses;
 }
 
+function getAllData(data) {
+    // function to manage the generation of attributes for all course data that is used further
+    data = getNames(data);
+    data = timeTaken(data);
+    data = getTwelvePoint(data);
+    return data;
+}
+
+function getNames(courses) {
+    // function replaces course code and name fields with a combined field
+    for (var i = 0; i < courses.length; i++) {
+        //combine course code and course name and add replace course code data
+        courses[i][0] = courses[i][0].concat(": ", courses[i][1]);
+        //remove course name data
+        courses[i].splice(1, 1);
+    }
+    return courses;
+}
+
+function timeTaken(courses) {
+    //function caclulates the time that the course was taken --> year and semster
+    for (var i = 0; i < courses.length; i++) {
+        // if fall use parsed year else subtract 1 from parsed year
+        // calculator assumes that all school years start in the fall
+        if (courses[i][1].substring(5, 9) == 'Fall') {
+            courses[i].splice(1, 0, parseInt(courses[i][1].substring(0, 4)))
+        } else {
+            courses[i].splice(1, 0, parseInt(courses[i][1].substring(0, 4)) - 1)
+        }
+        //parse for and add the semseter that the course was taken in
+        var semsester = courses[i][2].split(' ');
+        courses[i].splice(2, 0, semsester[1]);
+        //remove the old course year and semseter data
+    }
+    return courses;
+}
+
 function getTwelvePoint(courses) {
     for (var i = 0; i < courses.length; i++) {
+        //convert corse units from string to int
+        courses[i][5] = parseInt(courses[i][5]);
         // get the Twelve Point grade from the letter grade
-        var grade = courses[i][3];
+        var grade = courses[i][4];
         if (grade == 'A+') {
-            courses[i].push(12);
+            courses[i].splice(5, 0, 12);
         } else if (grade == 'A') {
-            courses[i].push(11);
+            courses[i].splice(5, 0, 11);
         } else if (grade == 'A-') {
-            courses[i].push(10);
+            courses[i].splice(5, 0, 10);
         } else if (grade == 'B+') {
-            courses[i].push(9);
+            courses[i].splice(5, 0, 9);
         } else if (grade == 'B') {
-            courses[i].push(8);
+            courses[i].splice(5, 0, 8);
         } else if (grade == 'B-') {
-            courses[i].push(7);
+            courses[i].splice(5, 0, 7);
         } else if (grade == 'C+') {
-            courses[i].push(6);
+            courses[i].splice(5, 0, 6);
         } else if (grade == 'C') {
-            courses[i].push(5);
+            courses[i].splice(5, 0, 5);
         } else if (grade == 'C-') {
-            courses[i].push(4);
+            courses[i].splice(5, 0, 4);
         } else if (grade == 'D+') {
-            courses[i].push(3);
+            courses[i].splice(5, 0, 3);
         } else if (grade == 'D') {
-            courses[i].push(2);
+            courses[i].splice(5, 0, 2);
         } else if (grade == 'D-') {
-            courses[i].push(1);
+            courses[i].splice(5, 0, 2);
         } else {
-            courses[i].push(0);
+            courses[i].splice(5, 0, 0);
         }
+        //remove the letter grade
+        courses[i].splice(4, 1);
+        //add in the total credits earned
+        courses[i].splice(6, 0, courses[i][4] * courses[i][5]);
     }
-
     return courses;
 }
 
 function isIncluded(courses) {
+    //function returns two arrays
+    //first array is of courses that are included in GPA calculation
+    //other array is of courses not included in GPA calculation
+    var toReturn = [];
+    var notIncluded = []
     for (var i = 0; i < courses.length; i++) {
-        if ((courses[i][5] == 'In Progress') || (courses[i][3] == 'NC') || (courses[i][3] == 'COM') || (courses[i][5] == 'Transferred') || (courses[i][4] == 0)) {
-            courses[i].push(false);
+        if ((courses[i][7] == 'In Progress') || (courses[i][5] == 0)) {
+            courses[i].splice(7, 1);
+            notIncluded.push(courses[i]);
         } else {
-            courses[i].push(true);
+            courses[i].splice(7, 1);
+            toReturn.push(courses[i]);
         }
     }
-
-    return courses;
-}
-
-function addAcademicYear(courses) {
-    for (var i = 0; i < courses.length; i++) {
-        if (courses[i][2].substring(5, 9) == 'Fall') {
-            courses[i].push(parseInt(courses[i][2].substring(0, 4)));
-        } else {
-            courses[i].push(parseInt(courses[i][2].substring(0, 4)) - 1);
-        }
-    }
-
-    return courses;
-}
-
-function addSemester(courses) {
-    for (var i = 0; i < courses.length; i++) {
-        var semsester = courses[i][2].split(' ');
-        courses[i].push(semsester[1]);
-    }
-    return courses;
+    return [toReturn, notIncluded];
 }
 
 function extractUniqueYears(years, courses) {
+    //function returns an array of all unique years in course list
     for (var i = 0; i < courses.length; i++) {
-        if (courses[i][2].substring(5, 9) == 'Fall') {
-            years.push(parseInt(courses[i][2].substring(0, 4)));
-        } else {
-            years.push(parseInt(courses[i][2].substring(0, 4)) - 1);
-        }
+        years.push(courses[i][1]);
     }
-
     years = Array.from(new Set(years));
-    return years;
+    return years.sort();
 }
 
 function extractUniqueSemesters(semesters, courses) {
+    //funtion returns array of all unique semesters in course list
     for (var i = 0; i < courses.length; i++) {
-        semesters.push(courses[i][2]);
+        semesters.push(courses[i][3]);
     }
     semesters = Array.from(new Set(semesters));
     semseters = semesters.sort();
     return semesters;
 }
 
-function calculateCredits(courses) {
-    for (var i = 0; i < courses.length; i++) {
-        courses[i].push(courses[i][4] * courses[i][6]);
-    }
-    return courses;
-}
-
-function convertUnits(courses) {
-    for (var i = 0; i < courses.length; i++) {
-        courses[i][4] = parseFloat(courses[i][4]);
-    }
-    return courses;
-}
-
-function calculateCumulativeGPA(cumulative, courses) {
-    //calculate final gpa
+function calculateCumulativeGPA(courses) {
+    //calculate overall GPA
     totalCredits = 0;
-    totalUnits = 0.0;
+    totalUnits = 0;
     for (var l = 0; l < courses.length; l++) {
-        if (courses[l][7] == true) {
-            totalUnits = totalUnits + parseInt(courses[l][4]);
-            totalCredits = totalCredits + courses[l][10];
-        }
+        totalUnits = totalUnits + courses[l][5];
+        totalCredits = totalCredits + courses[l][6];
     }
-    cumulative = ['Cumulative', totalUnits.toString(), totalCredits.toString(), ((totalCredits / totalUnits).toFixed(1)).toString()];
+    var cumulative = ['Cumulative', totalUnits.toString(), totalCredits.toString(), ((totalCredits / totalUnits).toFixed(1)).toString()];
     return cumulative;
 }
 
-function calculateYearlyGPA(yearly, courses, years) {
+function calculateYearlyGPA(courses, years) {
     var finalData = [];
     //calculate yearly gpa
     var totalCredits = 0;
-    var totalUnits = 0.0;
-
+    var totalUnits = 0;
     for (var j = 0; j < years.length; j++) {
         totalCredits = 0;
         totalUnits = 0;
         for (var k = 0; k < courses.length; k++) {
-            if ((courses[k][8] == years[j]) && courses[k][7] == true) {
-                totalUnits = totalUnits + parseInt(courses[k][4]);
-                totalCredits = totalCredits + courses[k][10];
+            if (courses[k][1] == years[j]) {
+                totalUnits = totalUnits + courses[k][5];
+                totalCredits = totalCredits + courses[k][6];
             }
         }
         finalData[j] = [years[j].toString() + '-' + (years[j] + 1).toString(), totalUnits.toString(), totalCredits.toString(), ((totalCredits / totalUnits).toFixed(1)).toString()];
-
     }
-
     for (var i = 0; i < finalData.length; i++) {
         finalData[i].push(parseInt(finalData[i][0]));
     }
-
-    yearly = finalData;
+    var yearly = finalData;
     return yearly;
 }
 
-function calculateSemesterlyGPA(semesterly, courses, semesters) {
+function calculateSemesterlyGPA(courses, semesters) {
     var finalData = [];
     //calculate yearly gpa
     var totalCredits = 0;
     var totalUnits = 0.0;
-
     for (var j = 0; j < semseters.length; j++) {
         totalCredits = 0;
         totalUnits = 0;
         for (var k = 0; k < courses.length; k++) {
-            if ((courses[k][2] == semesters[j]) && courses[k][7] == true) {
-                totalUnits = totalUnits + parseInt(courses[k][4]);
-                totalCredits = totalCredits + courses[k][10];
+            if (courses[k][3] == semesters[j]) {
+                totalUnits = totalUnits + courses[k][5];
+                totalCredits = totalCredits + courses[k][6];
             }
         }
         finalData[j] = [semesters[j], totalUnits.toString(), totalCredits.toString(), ((totalCredits / totalUnits).toFixed(1)).toString()];
-
     }
-
     finalData = academicYearID(finalData);
-
-    semesterly = finalData.sort();
+    var semesterly = finalData.sort();
     return semesterly;
 }
-
 
 function academicYearID(data) {
     for (var i = 0; i < data.length; i++) {
@@ -290,43 +265,6 @@ function createSemesterRow(TimePeriod, Units, Credits, grade) {
     return '<tr class="semesterrow" style = "padding: 8px; text-align: center; "><td>' + TimePeriod.toString() + '</td><td>' + Units.toString() + '</td><td>' + Credits.toString() + '</td><td>' + grade.toString() + '</td></tr>';
 }
 
-function createCourseRow(Course, Code, Units, Credits, grade) {
-    return '<tr class="courserow" style = "padding: 8px; text-align: center;"><td>' + (Code.toString() + ': ' + Course.toString()) + '</td><td>' + Units.toString() + '</td><td>' + Credits.toString() + '</td><td>' + grade.toString() + '</td></tr>';
-}
-
-function getUniqueGrade(data) {
-    var freq = [];
-    for (var i = 0; i < data.length; i++) {
-        if ((data[i][7] == true) && (freq.includes(data[i][6]) == false)) {
-            freq.push(data[i][6]);
-        }
-    }
-
-    freq = freq.sort(function(a, b) { return a - b; })
-    return freq;
-}
-
-function refineData(data){
-	var toReturn=[];
-	toReturn.push(["Course Code","Units","Grade","Year","Semester"]);
-	for (var i=0; i<data.length; i++){
-		toReturn.push([data[i][0],data[i][4],data[i][6],data[i][8],data[i][9]]);
-	}
-	return toReturn;
-}
-
-function toJSON(data){
-   
-
-    var i, n = data.length;
-    var tmp = new Array();
-    for (i=0; i<n; i++)
-    {
-        tmp[i] = [data[i][0],data[i][1], data[i][2],data[i][3],data[i][4]];
-    }
-    var mObj = new Object;
-    mObj.Courses = tmp;
-    var objJSON = JSON.stringify(mObj);
-
-    return objJSON
+function createCourseRow(Title, Units, Credits, grade) {
+    return '<tr class="courserow" style = "padding: 8px; text-align: center;"><td>' + (Title.toString()) + '</td><td>' + Units.toString() + '</td><td>' + Credits.toString() + '</td><td>' + grade.toString() + '</td></tr>';
 }
