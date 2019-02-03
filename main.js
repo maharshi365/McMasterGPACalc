@@ -1,46 +1,38 @@
 $(document).ready(function() {
-    $("#button").click(function() {
+    $("#summaryButton").click(function() {
         var userText = $("#inputText").val();
-        var courses = processRawData(userText);
+        courses = processRawData(userText);
         courses = getAllData(courses);
         courses = isIncluded(courses);
         // for future if not included courses need to be accessed
         var notIncluded = courses[1];
         courses = courses[0];
-        courses = courses.sort();
-        //array of all unique years
-        var years = [];
-        years = extractUniqueYears(years, courses);
-        //array of all unique semesters
-        var semesters = [];
-        semesters = extractUniqueSemesters(semesters, courses);
-        //calculate cumulative GPA data
-        var cumulative = calculateCumulativeGPA(courses);
-        //calculate yearly GPA data
-        var yearly = calculateYearlyGPA(courses, years);
-        //calculate semsterly values
-        var semesterly = calculateSemesterlyGPA(courses, semesters);
 
-        tableString = '<table>' + createTableHeaders();
-        tableString = tableString + createCumulativeRow(cumulative[1], cumulative[2], cumulative[3]);
-        for (var i = 0; i < yearly.length; i++) {
-            if (yearly[i][1] != 0) {
-                tableString = tableString + createYearRow(yearly[i][0], yearly[i][1], yearly[i][2], yearly[i][3]);
-            }
-            for (var j = 0; j < semesterly.length; j++) {
-                if ((semesterly[j][4] == yearly[i][4]) && (semesterly[j][1] != 0)) {
-                    tableString = tableString + createSemesterRow(semesterly[j][0], semesterly[j][1], semesterly[j][2], semesterly[j][3]);
-                }
-                for (var k = 0; k < courses.length; k++) {
-                    if ((semesterly[j][0] == courses[k][3]) && (courses[k][1] == yearly[i][4])) {
-                        tableString = tableString + createCourseRow(courses[k][0], courses[k][5], courses[k][6], courses[k][4]);
-                    }
-                }
-            }
-        }
-        tableString = tableString + '</tbody></table>';
-        $("#gradesTable").html(tableString);
+        //array of all unique years
+        years = extractUniqueYears(courses);
+        //array of all unique semesters
+        semesters = extractUniqueSemesters(courses);
+        //calculate cumulative GPA data
+        cumulative = calculateCumulativeGPA(courses);
+        //calculate yearly GPA data
+        yearly = calculateYearlyGPA(courses, years);
+        //calculate semsterly values
+        semesterly = calculateSemesterlyGPA(courses, semesters);
+        //create string that contains course data formatted by years and semesters
+        summaryString = createSummaryTableString(cumulative,yearly,semesterly,courses);
+
+        $("#gradesTable").html(summaryString);
     });
+
+    $("#coursesButton").click(function() {
+      var userText = $("#inputText").val();
+      courses = processRawData(userText);
+      courses = getAllData(courses);
+      var courseString = createCourseTableString(courses);
+      $("#gradesTable").html(courseString);
+    });
+
+
     $('.semesterrow').hide();
     $('.courserow').hide();
     $('#gradesTable').on('click', 'tr', function() {
@@ -160,11 +152,13 @@ function isIncluded(courses) {
             toReturn.push(courses[i]);
         }
     }
+    toReturn = toReturn.sort();
     return [toReturn, notIncluded];
 }
 
-function extractUniqueYears(years, courses) {
+function extractUniqueYears(courses) {
     //function returns an array of all unique years in course list
+    var years = [];
     for (var i = 0; i < courses.length; i++) {
         years.push(courses[i][1]);
     }
@@ -172,8 +166,9 @@ function extractUniqueYears(years, courses) {
     return years.sort();
 }
 
-function extractUniqueSemesters(semesters, courses) {
+function extractUniqueSemesters(courses) {
     //funtion returns array of all unique semesters in course list
+    var semesters = [];
     for (var i = 0; i < courses.length; i++) {
         semesters.push(courses[i][3]);
     }
@@ -250,7 +245,7 @@ function academicYearID(data) {
 }
 
 function createTableHeaders() {
-    return '<thead style = "padding: 8px; text-align: center;"><tr class="tableheader"><th>Time Period</th><th>Units Taken</th><th>Credits Earned</th><th>GPA</th></tr></thead><tbody>'
+    return '<thead style = "padding: 8px; text-align: center;"><tr class="tableheader"><th>Time Period/Course</th><th>Units Taken</th><th>Credits Earned</th><th>GPA</th></tr></thead><tbody>'
 }
 
 function createCumulativeRow(Units, Credits, grade) {
@@ -267,4 +262,43 @@ function createSemesterRow(TimePeriod, Units, Credits, grade) {
 
 function createCourseRow(Title, Units, Credits, grade) {
     return '<tr class="courserow" style = "padding: 8px; text-align: center;"><td>' + (Title.toString()) + '</td><td>' + Units.toString() + '</td><td>' + Credits.toString() + '</td><td>' + grade.toString() + '</td></tr>';
+}
+
+function createSoloTableHeaders() {
+    return '<thead style = "padding: 8px; text-align: center;"><tr class="tableheader"><th>Course</th><th>Academic Year</th><th>Semester</th><th>Units Taken</th><th>Credits Earned</th><th>GPA</th><th>Status</th></tr></thead><tbody>'
+}
+
+function createSoloCourseRow(Title, Year, Semester, Units, Credits, Grade, Status) {
+    return '<tr class="solocourserow" style = "padding: 8px; text-align: center;"><td>' + (Title.toString()) + '</td><td>' + Year.toString() + '</td><td>' + Semester.toString() + '</td><td>' + Units.toString() + '</td><td>' + Credits.toString() + '</td><td>' + Grade.toString() + '</td><td>' + Status.toString() + "</td></tr>";
+}
+
+function createSummaryTableString(cumulative,yearly,semesterly,courses){
+  var tableString = '<table>' + createTableHeaders();
+  tableString = tableString + createCumulativeRow(cumulative[1], cumulative[2], cumulative[3]);
+  for (var i = 0; i < yearly.length; i++) {
+      if (yearly[i][1] != 0) {
+          tableString = tableString + createYearRow(yearly[i][0], yearly[i][1], yearly[i][2], yearly[i][3]);
+      }
+      for (var j = 0; j < semesterly.length; j++) {
+          if ((semesterly[j][4] == yearly[i][4]) && (semesterly[j][1] != 0)) {
+              tableString = tableString + createSemesterRow(semesterly[j][0], semesterly[j][1], semesterly[j][2], semesterly[j][3]);
+          }
+          for (var k = 0; k < courses.length; k++) {
+              if ((semesterly[j][0] == courses[k][3]) && (courses[k][1] == yearly[i][4])) {
+                  tableString = tableString + createCourseRow(courses[k][0], courses[k][5], courses[k][6], courses[k][4]);
+              }
+          }
+      }
+  }
+  tableString = tableString + '</tbody></table>';
+  return tableString;
+}
+function createCourseTableString(courses){
+  var tableString = '<table>' + createSoloTableHeaders();
+  for(var i = 0; i<courses.length;i++){
+    var temp =  createSoloCourseRow(courses[i][0],courses[i][1],courses[i][3],courses[i][5],courses[i][6],courses[i][4],courses[i][7]);
+    tableString = tableString + temp;
+  }
+  tableString = tableString + '</tbody></table>';
+  return tableString;
 }
