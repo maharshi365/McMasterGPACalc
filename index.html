@@ -10,21 +10,24 @@
 <script src="main.js"></script>
 
 <body>
-  <div class="row justify-content-center" style="padding-top: 20px; padding-bottom: 50px">
-    <div class="col-5">
-      <div class="input-group">
-        <textarea type="text" class="form-control" rows="2" id="inputText" placeholder="Paste Here" style="height:112px;"></textarea>
-        <span class="input-group-addon btn btn-primary" id="summaryButton" style="min-height: 112px;display: inline-flex;align-items: center;">Go</span>
-        <span class="input-group-addon btn btn-primary" id="coursesButton" style="min-height: 112px;display: inline-flex;align-items: center;">Courses</span>
+  <div class="container-fluid">
+    <div class="row justify-content-center" style="padding-top: 20px; padding-bottom: 50px">
+      <div class="col-5">
+        <div class="input-group">
+          <textarea type="text" class="form-control" rows="2" id="inputText" placeholder="Paste Here" style="height:112px;"></textarea>
+          <span class="input-group-addon btn btn-primary" id="summaryButton" style="min-height: 112px;display: inline-flex;align-items: center;">GPA Breakdown</span>
+          <span class="input-group-addon btn btn-primary" id="coursesButton" style="min-height: 112px;display: inline-flex;align-items: center;">All Course Data</span>
+        </div>
       </div>
-    </div>
-    <div class="col-5">
-      <ol>
-        <li> <a href="https://csprd.mcmaster.ca/psc/prcsprd/EMPLOYEE/HRMS_LS/c/SA_LEARNER_SERVICES.SSS_MY_CRSEHIST.GBL?&" target="_blank">Click here to get to your course history page. Log in if you have to.</a></li>
-        <li>Copy the entire page</li>
-        <li>Paste into the textbox on the left</li>
-        <li>Click Go</li>
-      </ol>
+      <div class="col-5">
+        <ol>
+          <li> <a href="https://csprd.mcmaster.ca/psc/prcsprd/EMPLOYEE/HRMS_LS/c/SA_LEARNER_SERVICES.SSS_MY_CRSEHIST.GBL?&" target="_blank">Click here to get to your course history page. Log in if you have to.</a></li>
+          <li>Copy the entire page</li>
+          <li>Paste into the textbox on the left</li>
+          <li>Click on what you want to generate</li>
+          <li>If you generate GPA, click on the row for more detailed views. You can zoom until the course level.</li>
+        </ol>
+      </div>
     </div>
   </div>
   <div class="container-fluid">
