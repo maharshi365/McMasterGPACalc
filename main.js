@@ -3,10 +3,14 @@ $(document).ready(function() {
         var userText = $("#inputText").val();
         courses = processRawData(userText);
         courses = getAllData(courses);
+        var allData = courses;
+        var uFrequency = getUnitFreq(allData);
         courses = isIncluded(courses);
         // for future if not included courses need to be accessed
         var notIncluded = courses[1];
         courses = courses[0];
+        var gFrequency = getGradeFreq(courses);
+
 
         //array of all unique years
         years = extractUniqueYears(courses);
@@ -22,6 +26,8 @@ $(document).ready(function() {
         summaryString = createSummaryTableString(cumulative,yearly,semesterly,courses);
 
         $("#gradesTable").html(summaryString);
+
+
     });
 
     $("#coursesButton").click(function() {
@@ -293,6 +299,7 @@ function createSummaryTableString(cumulative,yearly,semesterly,courses){
   tableString = tableString + '</tbody></table>';
   return tableString;
 }
+
 function createCourseTableString(courses){
   var tableString = '<table>' + createSoloTableHeaders();
   for(var i = 0; i<courses.length;i++){
@@ -301,4 +308,20 @@ function createCourseTableString(courses){
   }
   tableString = tableString + '</tbody></table>';
   return tableString;
+}
+
+function getUnitFreq(data) {
+  units = [0,0,0,0,0,0,0];
+  for (var i = 0; i<data.length; i++){
+    units[data[i][5] - 1]++;
+  }
+  return units;
+}
+
+function getGradeFreq(data){
+  grades = [0,0,0,0,0,0,0,0,0,0,0,0,0,0];
+  for(var i=0;i<data.length;i++){
+    grades[data[i][4]]++;
+  }
+  return grades;
 }
