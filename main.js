@@ -131,7 +131,7 @@ function getTwelvePoint(courses) {
         } else if (grade == 'D') {
             courses[i].splice(5, 0, 2);
         } else if (grade == 'D-') {
-            courses[i].splice(5, 0, 2);
+            courses[i].splice(5, 0, 1);
         } else {
             courses[i].splice(5, 0, 0);
         }
