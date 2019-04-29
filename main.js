@@ -59,8 +59,8 @@ function processRawData(rawData) {
     var format = /[A-Z]+ +(.)*\n(.)*\n+[0-9]+ +[A-z]*\n+[A-Z\D]*\n+[0-9]+[.]+[0-9]*\n+[A-z]*\n/gm;
     var courses = [];
     while ((row = format.exec(rawData)) !== null) {
-        var entry = row[0].split('\n');
-        courses.push(entry);
+        var course = row[0].split('\n');
+        courses.push(course);
     }
     return courses;
 }
