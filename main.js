@@ -209,7 +209,7 @@ function calculateYearlyGPA(courses, years) {
                 totalCredits = totalCredits + courses[k][6];
             }
         }
-        finalData[j] = [years[j].toString() + '-' + (years[j] + 1).toString(), totalUnits.toString(), totalCredits.toString(), ((totalCredits / totalUnits).toFixed(1)).toString()];
+        finalData[j] = [years[j].toString() + '-' + (years[j] + 1).toString(), totalUnits.toString(), totalCredits.toString(), ((totalCredits / totalUnits).toFixed(3)).toString()];
     }
     for (var i = 0; i < finalData.length; i++) {
         finalData[i].push(parseInt(finalData[i][0]));
