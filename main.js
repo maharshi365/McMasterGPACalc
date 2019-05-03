@@ -191,7 +191,7 @@ function calculateCumulativeGPA(courses) {
         totalUnits = totalUnits + courses[l][5];
         totalCredits = totalCredits + courses[l][6];
     }
-    var cumulative = ['Cumulative', totalUnits.toString(), totalCredits.toString(), ((totalCredits / totalUnits).toFixed(1)).toString()];
+    var cumulative = ['Cumulative', totalUnits.toString(), totalCredits.toString(), ((totalCredits / totalUnits).toFixed(3)).toString()];
     return cumulative;
 }
 
@@ -232,7 +232,7 @@ function calculateSemesterlyGPA(courses, semesters) {
                 totalCredits = totalCredits + courses[k][6];
             }
         }
-        finalData[j] = [semesters[j], totalUnits.toString(), totalCredits.toString(), ((totalCredits / totalUnits).toFixed(1)).toString()];
+        finalData[j] = [semesters[j], totalUnits.toString(), totalCredits.toString(), ((totalCredits / totalUnits).toFixed(3)).toString()];
     }
     finalData = academicYearID(finalData);
     var semesterly = finalData.sort();
