@@ -2,6 +2,7 @@ $(document).ready(function() {
     $("#summaryButton").click(function() {
         var userText = $("#inputText").val();
         courses = processRawData(userText);
+        console.log(courses)
         courses = getAllData(courses);
         var allData = courses;
         var uFrequency = getUnitFreq(allData);
@@ -56,7 +57,7 @@ $(document).ready(function() {
 });
 
 function processRawData(rawData) {
-    var format = /[A-Z]+ +(.)*\n(.)*\n+[0-9]+ +[A-z]*\n+[A-Z\D]*\n+[0-9]+[.]+[0-9]*\n+[A-z]*\n/gm;
+    var format = /[A-Z]+ +(.)*\n(.)*\n+[0-9]+ +[A-z]*\n+[A-Z\D]*\n+[0-9]+[.]+[0-9]*\n+[A-z]*/gm;
     var courses = [];
     while ((row = format.exec(rawData)) !== null) {
         var course = row[0].split('\n');
